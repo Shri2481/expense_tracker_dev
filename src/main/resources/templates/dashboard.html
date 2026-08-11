@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Dashboard - Smart Expense')}"></head>
+<body>
+<div class="app-container d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar('dashboard')}"></div>
+    <div class="main-wrapper flex-grow-1">
+        <div th:replace="~{fragments/navbar :: navbar('Dashboard')}"></div>
+        <main class="content" data-testid="dashboard-page">
+            <div th:replace="~{fragments/toast :: toast}"></div>
+
+            <!-- Stat cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card stat-card" data-testid="stat-total-expenses">
+                        <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+                        <span class="stat-label">Total Expenses</span>
+                        <span class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(dashboard.totalExpenses, 1, 'COMMA', 2, 'POINT')}">₹0.00</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card stat-card" data-testid="stat-today-expenses">
+                        <div class="stat-icon"><i class="bi bi-calendar-day"></i></div>
+                        <span class="stat-label">Today's Expenses</span>
+                        <span class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(dashboard.todayExpenses, 1, 'COMMA', 2, 'POINT')}">₹0.00</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card stat-card" data-testid="stat-month-expenses">
+                        <div class="stat-icon"><i class="bi bi-calendar-month"></i></div>
+                        <span class="stat-label">This Month</span>
+                        <span class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(dashboard.currentMonthExpenses, 1, 'COMMA', 2, 'POINT')}">₹0.00</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card stat-card" data-testid="stat-total-transactions">
+                        <div class="stat-icon"><i class="bi bi-list-ol"></i></div>
+                        <span class="stat-label">Total Transactions</span>
+                        <span class="stat-value" th:text="${dashboard.totalTransactions}">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <!-- Recent expenses -->
+                <div class="col-12 col-xl-8">
+                    <div class="card h-100">
+                        <div class="card-header d-flex align-items-center">
+                            <span><i class="bi bi-clock-history me-2"></i>Recent Expenses</span>
+                            <a th:href="@{/expenses}" class="btn btn-outline-light btn-sm ms-auto">View all</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle" data-testid="recent-expenses-table">
+                                <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th class="text-end">Amount</th>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Payment</th>
+                                    <th>Merchant</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="e : ${dashboard.recentExpenses}">
+                                    <td th:text="${e.title}">Title</td>
+                                    <td class="text-end amount" th:text="'₹' + ${#numbers.formatDecimal(e.amount, 1, 'COMMA', 2, 'POINT')}">₹0</td>
+                                    <td th:text="${#temporals.format(e.expenseDate, 'dd/MM/yyyy')}">01/01/2026</td>
+                                    <td><span class="pill" th:text="${e.category.name}">Cat</span></td>
+                                    <td class="text-muted-2" th:text="${e.paymentMethod.name}">UPI</td>
+                                    <td class="text-muted-2" th:text="${e.merchantName != null and !e.merchantName.isEmpty()} ? ${e.merchantName} : '—'">—</td>
+                                </tr>
+                                <tr th:if="${dashboard.recentExpenses.isEmpty()}">
+                                    <td colspan="6">
+                                        <div class="empty-state">
+                                            <i class="bi bi-inbox d-block mb-2"></i>
+                                            No expenses yet. Start by adding one.
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category summary -->
+                <div class="col-12 col-xl-4">
+                    <div class="card h-100">
+                        <div class="card-header"><i class="bi bi-pie-chart me-2"></i>Category Summary</div>
+                        <div class="card-body">
+                            <div th:if="${dashboard.categorySummary.isEmpty()}" class="empty-state">
+                                <i class="bi bi-pie-chart d-block mb-2"></i>No data yet
+                            </div>
+                            <div th:each="c : ${dashboard.categorySummary}"
+                                 class="d-flex justify-content-between align-items-center py-2 border-bottom"
+                                 style="border-color: var(--border) !important;" data-testid="category-summary-row">
+                                <span><i class="bi bi-tag me-2 text-muted-2"></i><span th:text="${c.categoryName}">Food</span></span>
+                                <span class="amount" th:text="'₹' + ${#numbers.formatDecimal(c.total, 1, 'COMMA', 2, 'POINT')}">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

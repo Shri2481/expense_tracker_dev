@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="sidebar(active)" id="appSidebar"
+     class="offcanvas-md offcanvas-start sidebar" tabindex="-1">
+    <div class="brand">
+        <div class="brand-mark"><i class="bi bi-wallet2"></i></div>
+        <div>
+            <p class="brand-title">Smart Expense</p>
+            <span class="brand-sub">Manager</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white ms-auto d-md-none"
+                data-bs-dismiss="offcanvas" data-bs-target="#appSidebar" aria-label="Close"></button>
+    </div>
+    <nav class="nav-menu">
+        <a th:href="@{/dashboard}" class="nav-link" th:classappend="${active == 'dashboard'} ? 'active'"
+           data-testid="nav-dashboard">
+            <i class="bi bi-grid-1x2"></i><span>Dashboard</span>
+        </a>
+        <a th:href="@{/expenses}" class="nav-link" th:classappend="${active == 'expenses'} ? 'active'"
+           data-testid="nav-expenses">
+            <i class="bi bi-receipt"></i><span>Expenses</span>
+        </a>
+        <a th:href="@{/categories}" class="nav-link" th:classappend="${active == 'categories'} ? 'active'"
+           data-testid="nav-categories">
+            <i class="bi bi-tags"></i><span>Categories</span>
+        </a>
+    </nav>
+</div>
+</body>
+</html>

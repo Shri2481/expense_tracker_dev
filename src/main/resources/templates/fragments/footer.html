@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="footer" class="footer">
+    Smart Expense Manager &middot; Personal expense tracking MVP &middot;
+    <span th:text="${#dates.year(#dates.createNow())}">2026</span>
+</footer>
+</body>
+</html>

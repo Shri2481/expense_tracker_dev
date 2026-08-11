@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: expense-tracker
+    runtime: java
+    plan: free
+
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
+
+    envVars:
+      - key: PORT
+        value: "10000"
+
+      - key: DB_HOST
+        fromDatabase:
+          name: expense-tracker-db
+          property: host
+
+      - key: DB_PORT
+        fromDatabase:
+          name: expense-tracker-db
+          property: port
+
+      - key: DB_NAME
+        fromDatabase:
+          name: expense-tracker-db
+          property: database
+
+      - key: DB_USERNAME
+        fromDatabase:
+          name: expense-tracker-db
+          property: user
+
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: expense-tracker-db
+          property: password
+
+databases:
+  - name: expense-tracker-db
+    plan: free

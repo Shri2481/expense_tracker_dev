@@ -3,39 +3,35 @@ services:
     name: expense-tracker
     runtime: docker
     plan: free
-
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
+    dockerfilePath: ./dockerfile
+    dockerContext: .
 
     envVars:
-      - key: PORT
-        value: "10000"
-
       - key: DB_HOST
         fromDatabase:
-          name: expense-tracker-db
+          name: expense_tracker
           property: host
 
       - key: DB_PORT
         fromDatabase:
-          name: expense-tracker-db
+          name: expense_tracker
           property: port
 
       - key: DB_NAME
         fromDatabase:
-          name: expense-tracker-db
+          name: expense_tracker
           property: database
 
       - key: DB_USERNAME
         fromDatabase:
-          name: expense-tracker-db
+          name: expense_tracker
           property: user
 
       - key: DB_PASSWORD
         fromDatabase:
-          name: expense-tracker-db
+          name: expense_tracker
           property: password
 
 databases:
-  - name: expense-tracker-db
+  - name: expense_tracker
     plan: free
